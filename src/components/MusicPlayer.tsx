@@ -48,10 +48,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
   }, [isPlaying, audioLoaded]);
 
   return (
-    <div className="fixed bottom-6 right-6 z-40">
-      <audio ref={audioRef} loop preload="auto" src="/src/data/music.mp3" />
+    <div className="fixed right-6 bottom-6 z-40">
+      <audio ref={audioRef} loop preload="auto" src="/music.mp3" />
       <button
-        className="bg-white/80 backdrop-blur-sm hover:bg-white/90 text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
+        className="p-3 text-gray-800 rounded-full shadow-lg backdrop-blur-sm transition-all duration-300 bg-white/80 hover:bg-white/90 hover:scale-105"
         onClick={togglePlay}
         aria-label={isPlaying ? 'Pause Music' : 'Play Music'}
         tabIndex={0}
