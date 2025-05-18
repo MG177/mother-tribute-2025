@@ -39,6 +39,8 @@ const Slide: React.FC<SlideProps> = ({
 }) => {
   const slideRef = useRef<HTMLDivElement>(null);
 
+  console.log(layout, index);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -126,37 +128,41 @@ const Slide: React.FC<SlideProps> = ({
       case 'grid':
         return (
           <motion.div
-            className="grid grid-cols-1 gap-8 p-8 h-full md:grid-cols-2 md:p-12"
+            className="flex overflow-y-auto flex-col p-8 h-full md:p-12"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={slideVariants}
           >
-            {images && images.length > 0 ? (
-              images.map((img, i) => (
-                <motion.div
-                  key={i}
-                  className="overflow-hidden relative rounded-lg"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.2 }}
-                  viewport={{ once: true }}
-                >
-                  <img
-                    src={img}
-                    alt=""
-                    className="object-cover w-full h-full"
-                  />
-                </motion.div>
-              ))
-            ) : (
-              <div className="text-center md:col-span-2">
-                <h2
-                  className={`mb-6 font-serif text-3xl font-bold md:text-5xl ${textColor}`}
-                >
-                  {heading}
-                </h2>
-                <p className={`text-lg md:text-xl ${textColor}`}>{content}</p>
+            <div className="mb-8 text-center">
+              <h2
+                className={`mb-6 font-serif text-3xl font-bold md:text-5xl ${textColor}`}
+              >
+                {heading}
+              </h2>
+              <p className={`mb-8 text-lg md:text-xl ${textColor}`}>
+                {content}
+              </p>
+            </div>
+
+            {images && images.length > 0 && (
+              <div className="grid flex-grow grid-cols-1 gap-4 sm:grid-cols-2">
+                {images.map((img, i) => (
+                  <motion.div
+                    key={i}
+                    className="overflow-hidden relative rounded-lg aspect-square"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.2 }}
+                    viewport={{ once: true }}
+                  >
+                    <img
+                      src={img}
+                      alt=""
+                      className="object-cover w-full h-full"
+                    />
+                  </motion.div>
+                ))}
               </div>
             )}
           </motion.div>
@@ -176,7 +182,7 @@ const Slide: React.FC<SlideProps> = ({
                 <motion.img
                   src={imageUrl}
                   alt=""
-                  className="object-cover w-full h-full opacity-50"
+                  className="object-cover w-full h-full opacity-50 saturate-50"
                   initial={{ scale: 1.2 }}
                   whileInView={{ scale: 1 }}
                   transition={{ duration: 1.5 }}

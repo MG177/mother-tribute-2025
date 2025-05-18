@@ -1,14 +1,26 @@
-import React, { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Header from './components/Header';
 import Slide from './components/Slide';
 import MusicPlayer from './components/MusicPlayer';
+import MusicConfirmationModal from './components/MusicConfirmationModal';
 import Navigation from './components/Navigation';
 import { slides } from './data/slideData';
 
 function App() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [showMusicModal, setShowMusicModal] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMusicConfirm = () => {
+    setIsMusicPlaying(true);
+    setShowMusicModal(false);
+  };
+
+  const handleMusicDecline = () => {
+    setIsMusicPlaying(false);
+    setShowMusicModal(false);
+  };
 
   // Handle intersection observer to detect active slide
   useEffect(() => {
@@ -21,7 +33,10 @@ function App() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const slideIndex = parseInt(entry.target.getAttribute('data-index') || '0', 10);
+          const slideIndex = parseInt(
+            entry.target.getAttribute('data-index') || '0',
+            10
+          );
           setActiveSlide(slideIndex);
         }
       });
@@ -48,7 +63,7 @@ function App() {
   return (
     <div className="overflow-hidden relative w-full h-screen font-sans text-gray-800">
       <Header />
-      
+
       <div
         ref={containerRef}
         className="overflow-y-scroll h-screen snap-y snap-mandatory scroll-smooth"
@@ -62,6 +77,19 @@ function App() {
             content={slide.content}
             bgColor={slide.bgColor}
             textColor={slide.textColor}
+            layout={
+              slide.layout as
+                | 'split'
+                | 'grid'
+                | 'focal'
+                | 'minimal'
+                | 'asymmetric'
+                | 'fullscreen'
+                | 'radial'
+                | 'zigzag'
+                | undefined
+            }
+            images={slide.images}
           />
         ))}
       </div>
@@ -70,6 +98,12 @@ function App() {
         totalSlides={slides.length}
         activeSlide={activeSlide}
         onNavigate={scrollToSlide}
+      />
+
+      <MusicConfirmationModal
+        isOpen={showMusicModal}
+        onConfirm={handleMusicConfirm}
+        onDecline={handleMusicDecline}
       />
 
       <MusicPlayer
